@@ -1,0 +1,24 @@
+/* Use the formula 1 font */
+@font-face {
+    font-family: 'F1';
+    src: url('Formula1-Regular.woff') format('woff');
+}
+
+/* Change the background color and font of the header */
+.header {
+    font-family: "F1";
+    background-color: #dd0401;
+}
+
+/* Make the header text white */
+.header a {
+    color: #FFF;
+    font-size: 0.9em;
+} 
+
+/* Animate the black background on hover */
+.header a:hover {
+    color: #FFF;
+    background-color: #000;
+    transition: ease-in-out background-color .25s;
+}
