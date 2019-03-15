@@ -4,6 +4,10 @@
     src: url('Formula1-Regular.woff') format('woff');
 }
 
+body {
+    background-color: rgb(246,244,241) !important;
+}
+
 /* Change the background color and font of the header */
 .header {
     font-family: "F1";
@@ -21,4 +25,17 @@
     color: #FFF;
     background-color: #000;
     transition: ease-in-out background-color .25s;
+}
+
+
+body > .container {
+    background-color: #FFF;
+}
+
+.driver-portrait {
+    /* border: 1px solid #dd0410; */
+}
+
+.driver-info {
+    font-family: "F1";
 }
