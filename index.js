@@ -13,4 +13,12 @@ app.get('/driver', function(req,res) {
     res.render('driver', {});
 });
 
+app.get('/constructors', function(req, res){
+    res.render('constructors', {})
+});
+
+app.get('/tracks', function(req, res){
+    res.render('tracks', {})
+})
+
 app.listen(port, () => console.log("Listening on port " + port + "..."));
