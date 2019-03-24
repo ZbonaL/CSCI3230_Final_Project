@@ -1,9 +1,52 @@
 include nav.pug
 
-.container.mt-4
-    .row 
-        .col-4
-            img(src='https://www.formula1.com/content/fom-website/en/drivers/sebastian-vettel/_jcr_content/image.img.1024.medium.jpg/1551784055163.jpg').img-fluid.driver-portrait
-        .col.p-4
-            h1.driver-info
-                b Sebastian Vettel
+div.container.search-form.f1-border-form.pl-5.pr-5.mt-4
+    div.row(style="border-bottom: 2px solid lightgrey;").pt-4.pb-0
+        h3.f1-font-bold Search
+    div.row
+        form
+            div.form-group
+                label.f1-font Query:
+                input.form-control(type='text' placeholder='Enter a query')
+            div.form-group.form-check
+                input#driver-radio.form-check-input(type='radio' checked='checked' value='drivers')
+                label.form-check-label(for='#driver-radio') Drivers
+            button.btn.btn-primary(type='submit') Submit
+div.container#search-results
+    div.row.result-card.p-2.dropshadow
+        div.col-2.pl-0
+            img(src='https://www.formula1.com/content/fom-website/en/drivers/sebastian-vettel/_jcr_content/image.img.1024.medium.jpg/1551784055163.jpg').driver-portrait.driver-thumbnail
+        div.col.p-2
+            h3.f1-font Sebastian Vettel
+    div.row.result-card.p-2.dropshadow
+        div.col-2.pl-0
+            img(src='https://www.formula1.com/content/fom-website/en/drivers/sebastian-vettel/_jcr_content/image.img.1024.medium.jpg/1551784055163.jpg').driver-portrait.driver-thumbnail
+        div.col.p-2
+            h3.f1-font Sebastian Vettel
+    
+   
+   
+    //- div.row
+    //-     div.col-3
+    //-         img(src='https://www.formula1.com/content/fom-website/en/drivers/sebastian-vettel/_jcr_content/image.img.1024.medium.jpg/1551784055163.jpg').img-fluid.driver-portrait
+    //-     div.col
+    //-         h3.driver-info.f1-border-secondary.mb-3
+    //-             p.f1-font
+    //-                 b Sebastian Vettel
+    //-         p Born and raised a Bull, but now very much a Prancing Horse, F1's poster boy of early achievement had won more than all but two drivers in history by the time he was just 26, including back-to-back world titles between 2010 and 2013.
+    //-         p Vettel’s trademark is pure pace – and of course his one-finger victory salute. In the chase to the chequered flag, he likes to lead from the front and just like his hero, Michael Schumacher, Vettel has settled in as a race-winning leader at Ferrari. 
+    //-         p But for all his competitive streak, Vettel has a playful side too and has been known to let loose with a spot of Beatles karaoke - and baby can he drive a car. Alongside his four world crowns he can boast more than 50 pole positions and race victories, ranking him – statistically - above many of the biggest names in F1 history. No wonder then that he was hand-picked to return Grand Prix racing’s oldest team to glory. 
+    //-         p Since his move to Maranello, Vettel’s rivalry with Lewis Hamilton has intensified. Opposites off track – Hamilton leading a glamorous public life while Vettel is a private family man – the duo are evenly matched on Sundays as they bid not just for more world titles, but to be hailed the best of their generation.
+    //- div.row
+    //-     table.table
+    //-         tr
+    //-             td(style="text-align: center;")
+    //-                 |ha
+    //-             td(style="text-align: center;")
+    //-                 |ha
+    //-             td(style="text-align: center;")
+    //-                 |ha
+
+
+    
+

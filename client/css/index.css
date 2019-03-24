@@ -1,11 +1,40 @@
 /* Use the formula 1 font */
+
 @font-face {
     font-family: 'F1';
     src: url('Formula1-Regular.woff') format('woff');
 }
 
+@font-face {
+    font-family: 'F1';
+    src: url('Formula1-Bold.woff') format('woff');
+    font-weight: bold;
+}
+
 body {
-    background-color: rgb(246,244,241) !important;
+    /* background-color: rgb(246,244,241) !important; */
+    padding-top: 70px;
+}
+
+/* Provide some padding for the rows */
+.row {
+    margin-bottom: 2em;
+    margin-top: 2em;
+}
+
+/* Used to include the font */
+.f1-font {
+    font-family: "F1";
+}
+
+.f1-font-bold {
+    font-family: "F1";
+    font-weight: bold;
+}
+
+/* Used for large bodies of text */
+.text-body {
+    font-size: 0.90em;
 }
 
 /* Change the background color and font of the header */
@@ -18,7 +47,7 @@ body {
 .header a {
     color: #FFF;
     font-size: 0.9em;
-} 
+}
 
 /* Animate the black background on hover */
 .header a:hover {
@@ -27,48 +56,63 @@ body {
     transition: ease-in-out background-color .25s;
 }
 
-
-body > .container {
-    background-color: #FFF;
+/* The primary border for pages */
+.f1-border-primary {
+    border-top: 10px solid #dd0401;
+    border-right: 10px solid #dd0401;
+    border-bottom: 10px solid #dd0401;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
 }
 
-.driver-portrait {
-    /* border: 1px solid #dd0410; */
+/* The secondary border for pages */
+.f1-border-secondary {
+    border-bottom: 10px solid #000;
+    /* padding-top: 20px;
+    padding-bottom: 20px; */
 }
 
-.driver-info {
-    font-family: "F1";
+.f1-border-form {
+    border: 1px solid black; 
+    border-radius: 10px;
 }
 
-.about-header, .engine-header{
-    background-color: #dd0401;
-    font-family: "F1";
-    color: #FFF;
-    margin: 1rem;
-    padding-top: 0.5rem;
-    text-align: center;
+/* The styling for the content on the main page */
+/* .index-content * {
+    margin-top: 20px;
+} */
+
+/* The styling for the paragraph content on the index */
+/* .index-content p {
+    margin: 0 20px 20px 20px;
+} */
+
+.result-card {
+    background-color: rgb(246,244,241);
 }
 
-.about-div , .engines{
-    border: solid #dd0401 1px;
-    border-radius: 0.5em;
-    padding: 0.1rem;
-    margin: 1em;
+/* The style of the search results */
+.driver-thumbnail {
+    width: 150px;
+    height: 150px;
 }
 
-.para{
-    padding: 0.5rem;
-    font-family: "F1";
-    margin: 0.5em;
+/* Give the driver a shadow */
+.dropshadow {
+    /*
+    Box-Shadow's Arguments are:
+    1) xoffset
+    2) yoffset
+    3) blur
+    4) color
+    , any other shadow
+    */
+    box-shadow: 0px 1px 3px rgba(0,0,0,0.12), 
+                0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.7s cubic-bezier(.2,.8,.2,1);
 }
 
-.engine-list, .engine-list li{
-    font-family: "F1";
-    list-style: none;
-    margin: 1rem;
+/* Give the driver a different shadow on hover */
+.dropshadow:hover {
+    box-shadow: 0px 14px 28px rgba(0,0,0,0.25), 0 10px 30px rgba(0, 0, 0, 0.22);
 }
-
-.engines a {
-    color: black;
-    font-size: 0.9em;
-} 
