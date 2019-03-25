@@ -1,11 +1,15 @@
 let express = require('express');
-var bodyParser = require('body-parser')
+var bodyParser = require('body-parser');
+
 const app = express();
 const port = 5432;
 
 app.set("view engine", "pug");
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(`${__dirname}/client`));
+
+let mongo = require('mongodb').MongoClient;
+let mongo_url = "mongodb://localhost:27017/";
 
 app.get('/', function (req, res) {
     res.render('index');
@@ -18,16 +22,73 @@ app.get('/search', function (req, res) {
 app.post('/query', function (req, res) {
     let query = req.body.query;
     let query_type = req.body.query_type;
-    
-    res.json({"test": "test"});
+
+    mongo.connect(mongo_url, { useNewUrlParser: true }, function (err, db) {
+        if (err) throw err;
+        let db_object = db.db("F1Stats");
+
+        let db_query = {};
+        if (query != "") {
+            db_query.forename = query;
+        }
+
+        db_object.collection("Drivers").find(db_query).limit(15).toArray(function (err, result) {
+            if (err) throw err;
+            fixPeriod(result);
+            db.close();
+            res.json(result);
+        });
+    });
+
 });
 
-app.get('/constructors', function (req, res) {
-    res.render('constructors', {})
-});
+app.get('/driver', function (req, res) {
+    let driver_fname = req.query.forename;
+    let driver_lname = req.query.surname;
 
-app.get('/tracks', function (req, res) {
-    res.render('tracks', {})
-})
+    mongo.connect(mongo_url, { useNewUrlParser: true }, function (err, db) {
+        if (err) throw err;
+        let db_object = db.db("F1Stats");
+        let db_query = { "forename": driver_fname, "surname": driver_lname };
+
+        let render_data = {
+            page_script: "js/driver.js"
+        }
+
+        db_object.collection("Drivers").find(db_query).toArray(function (err, result) {
+            if (err) throw err;
+            fixPeriod(result);
+            db.close();
+
+            if (result.length <= 0 || result[0].driverRef == null) {
+                if (driver_fname == undefined && driver_lname == undefined) {
+                    render_data.fname = "New";
+                    render_data.lname = "Driver";
+                } else {
+                    render_data.fname = "Driver Not";
+                    render_data.lname = "Found";
+                }
+            } else {
+                render_data.fname = result[0]["forename"];
+                render_data.lname = result[0]["surname"];
+            }
+
+            res.render('driver', render_data);
+        });
+    });
+});
 
 app.listen(port, () => console.log("Listening on port " + port + "..."));
+
+
+function fixPeriod(result) {
+    for (let i = 0; i < result.length; i++) {
+        for (let col in result[i]) {
+            if (typeof (result[i][col]) == "string") {
+                while (result[i][col].indexOf("{PERIOD}") != -1) {
+                    result[i][col] = result[i][col].replace("{PERIOD}", ".");
+                }
+            }
+        }
+    }
+}
