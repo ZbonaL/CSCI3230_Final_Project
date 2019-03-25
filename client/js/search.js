@@ -31,7 +31,7 @@ $(document).ready(function () {
                     let image_col = $("<div class='col-2 pl-0'></div>").appendTo(row);
                     let result_col = $("<div class='col mt-3 pl-2'></div>").appendTo(row);
 
-                    let pic_query = result[i]["forename"] + "+" + result[i]["surname"] + "+formula+1+portrait";
+                    let pic_query = result[i]["forename"] + "+" + result[i]["surname"] + "+F1+picture";
                     getPicUrl(pic_query, function (data) {
                         $("<img class='driver-portrait driver-thumbnail' src=" + data.items[0].link + ">").appendTo(image_col);
                     });

@@ -1,4 +1,9 @@
-let google_key = "AIzaSyC9aUb-Pe1vdRN2JvraH-sStv_0yfMMTs0";
+/**
+ * This class is used to store functions that are required by many 
+ * functions on the site`
+ */
+
+let google_key = "AIzaSyBphDItx-Lx0JtGqGfPmgg3BV34iLiN08s";
 
 function getPicUrl(query, func) {
 
@@ -12,3 +17,13 @@ function getPicUrl(query, func) {
         // async: true
     });
 }
+
+function removeSelected(element){
+    let td = element.find("td");
+    for(let i = 0; i <td.length; i++){
+        // makes element not editable
+        $(td[i]).attr('contenteditable', 'false');
+        $(td[i]).remove(".confirm-btn")
+    }
+}
+

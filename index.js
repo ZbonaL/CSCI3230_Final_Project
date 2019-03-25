@@ -1,5 +1,7 @@
 let express = require('express');
 var bodyParser = require('body-parser');
+let mongo = require('mongodb').MongoClient;
+
 
 const app = express();
 const port = 5432;
@@ -8,7 +10,6 @@ app.set("view engine", "pug");
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(express.static(`${__dirname}/client`));
 
-let mongo = require('mongodb').MongoClient;
 let mongo_url = "mongodb://localhost:27017/";
 
 app.get('/', function (req, res) {
@@ -42,6 +43,27 @@ app.post('/query', function (req, res) {
 
 });
 
+app.post("/driverdetails", function(req, res){
+    let driver_fname = req.body.forename;
+    let driver_lname = req.body.surname;
+
+    mongo.connect(mongo_url, { useNewUrlParser: true }, function (err, db) {
+        if (err) throw err;
+        let db_object = db.db("F1Stats");
+        let db_query = { "forename": driver_fname, "surname": driver_lname};
+
+        db_object.collection("Drivers").find(db_query).toArray(function (err, result) {
+            if (err) throw err;
+            fixPeriod(result);
+            db.close();
+
+
+            fixPeriod(result);
+            res.json(result);
+        });
+    });
+});
+
 app.get('/driver', function (req, res) {
     let driver_fname = req.query.forename;
     let driver_lname = req.query.surname;
@@ -49,7 +71,7 @@ app.get('/driver', function (req, res) {
     mongo.connect(mongo_url, { useNewUrlParser: true }, function (err, db) {
         if (err) throw err;
         let db_object = db.db("F1Stats");
-        let db_query = { "forename": driver_fname, "surname": driver_lname };
+        let db_query = { "forename": driver_fname, "surname": driver_lname};
 
         let render_data = {
             page_script: "js/driver.js"
