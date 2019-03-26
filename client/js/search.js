@@ -28,12 +28,12 @@ $(document).ready(function () {
                 for (let i = 0; i < result.length; i++) {
                     // The div for the row, image and name containers
                     let row = $("<div class='row result-card p-2 dropshadow'></div>").appendTo(results_div);
-                    let image_col = $("<div class='col-2 pl-0'></div>").appendTo(row);
+                    let image_col = $("<div class='col-2 pr-0 pl-0'></div>").appendTo(row);
                     let result_col = $("<div class='col mt-3 pl-2'></div>").appendTo(row);
 
-                    let pic_query = result[i]["forename"] + "+" + result[i]["surname"] + "+F1+picture";
+                    let pic_query = result[i]["forename"] + "+" + result[i]["surname"] + "+F1+driver+picture";
                     getPicUrl(pic_query, function (data) {
-                        $("<img class='driver-portrait driver-thumbnail' src=" + data.items[0].link + ">").appendTo(image_col);
+                        $("<img class='driver-thumbnail' src=" + data.items[0].link + ">").appendTo(image_col);
                     });
 
                     // Append the drivers name and number

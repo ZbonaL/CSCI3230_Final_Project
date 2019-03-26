@@ -103,10 +103,17 @@ body {
 
 /* The style of the search results */
 
-.driver-thumbnail, .driver-image{
-    width: auto;
-    max-width: 150px;
+.driver-thumbnail {
+    object-fit: cover;
+    object-position: 0% 10%;
+    width: 150px;
     height: 150px;
+}
+
+/* The style of the driver page */
+.driver-portrait {
+    object-fit: cover;
+    object-position: 0% 10%;
 }
 
 /* Give the driver a shadow */
