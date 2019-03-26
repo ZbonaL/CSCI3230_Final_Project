@@ -5,9 +5,15 @@ $(document).ready(function () {
     if (driver_name == "New Driver" || driver_name == "Driver Not Found") {
         // Default image here
     } else {
-       // Append the driver picture
+        // Append the driver picture
         getPicUrl(driver_name, function (data) {
             $("<img class='driver-portrait driver-thumbnail' src=" + data.items[0].link + ">").appendTo($("#driver-image"));
+        });
+
+        $(".update-btn").click(function () {
+            // update db here
+            let test = updateDB($(".table"));
+            console.log(test);
         });
 
         $.ajax({
@@ -28,6 +34,13 @@ $(document).ready(function () {
                     $("<th></th>").text(col).appendTo(row);
                     $("<td></td>").text(driver_data[col]).appendTo(row);
                     row.appendTo(table);
+
+                    // On enter keypress confirm
+                    row.on('keypress', function (event) {
+                        if (event.which == 13) {
+                            $(".confirm-btn").click();
+                        }
+                    });
                 }
 
                 // Allow the rows to be edited
@@ -86,4 +99,19 @@ function removeSelected(element, target_parent, revert_val) {
             $(td.parent()).find(".confirm-btn").remove();
         }
     }
+}
+
+function updateDB(table) {
+    // Get the rows from the table
+    let table_rows = table.find("tr");
+    let json_data = {};
+
+    // Iterate through the rows using 
+    // the first column as the key into the json
+    for (let row of table_rows) {
+        let key = $($(row).children()[0]).text();
+        json_data[key] = $($(row).children()[1]).text();
+    }
+
+    return json_data;
 }
