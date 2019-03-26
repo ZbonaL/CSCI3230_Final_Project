@@ -6,14 +6,21 @@ $(document).ready(function () {
         // Default image here
     } else {
         // Append the driver picture
-        getPicUrl(driver_name + "+F1+driver+picture", function (data) {
-            $("<img class='driver-portrait img-fluid' src=" + data.items[0].link + ">").appendTo($("#driver-image"));
+        getPicUrl(driver_name, function (data) {
+            $("<img class='driver-portrait driver-thumbnail' src=" + data.items[0].link + ">").appendTo($("#driver-image"));
         });
 
         $(".update-btn").click(function () {
             // update db here
             let test = updateDB($(".table"));
             console.log(test);
+
+
+            $.ajax({
+                url: "/driverupdates",
+                method: "POST",
+                data: updateDB($(".table")),
+            })
         });
 
         $.ajax({

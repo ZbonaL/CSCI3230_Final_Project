@@ -64,6 +64,28 @@ app.post("/driverdetails", function(req, res){
     });
 });
 
+app.post('/driverupdates', function(req, res){
+    let id = { "_id": ObjectID(req.body._id)}
+
+    delete req.body._id;
+    let update = {$set: req.body}
+
+    mongo.connect(mongo_url, {useNewUrlParser: true}, function(err,db){
+        if(err) throw err
+        let db_object = db.db("F1Stats");
+        console.log(req.body);
+        
+        db_object.collection("Drivers").updateOne(id, update , function(err, result){
+            if (err) throw err
+            // console.log(result)
+            console.log("DB was updated")
+
+            db.close();
+        })
+    })
+
+});
+
 app.get('/driver', function (req, res) {
     let driver_fname = req.query.forename;
     let driver_lname = req.query.surname;
@@ -109,6 +131,18 @@ function fixPeriod(result) {
             if (typeof (result[i][col]) == "string") {
                 while (result[i][col].indexOf("{PERIOD}") != -1) {
                     result[i][col] = result[i][col].replace("{PERIOD}", ".");
+                }
+            }
+        }
+    }
+}
+
+function reversefixPeriod(result) {
+    for (let i = 0; i < result.length; i++) {
+        for (let col in result[i]) {
+            if (typeof (result[i][col]) == "string") {
+                while (result[i][col].indexOf(".") != -1) {
+                    result[i][col] = result[i][col].replace(".", "{PERIOD}");
                 }
             }
         }
