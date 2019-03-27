@@ -16,3 +16,10 @@ function getPicUrl(query, func) {
         // async: true
     });
 }
+
+// Fade text into a different value
+function fadeInOut (text_element, value){
+    text_element.fadeOut(250, function(){
+        $(this).text(value).fadeIn(250);
+    })
+}

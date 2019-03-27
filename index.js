@@ -1,14 +1,29 @@
 let express = require('express');
-var bodyParser = require('body-parser');
+var body_parser = require('body-parser');
+var cookie_parser = require('cookie-parser')
 let mongo = require('mongodb').MongoClient;
-
 
 const app = express();
 const port = 5432;
 
 app.set("view engine", "pug");
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(body_parser.urlencoded({ extended: false }));
+app.use(cookie_parser());
 app.use(express.static(`${__dirname}/client`));
+
+// Set a new cookie for the client if 
+// they don't have one already
+app.use(function (req, res, next) {
+    let cookie = req.cookies.cookieName;
+    // Check if we have a cookie from the client
+    if (cookie === undefined) {
+        let cookie_id = Math.random().toString();
+        // Set to expire in *a long time*
+        res.cookie('cookieName', cookie_id, { expires: new Date(253402300000000) });
+    }
+    next();
+});
+
 
 let mongo_url = "mongodb://localhost:27017/";
 
@@ -43,14 +58,14 @@ app.post('/query', function (req, res) {
 
 });
 
-app.post("/driverdetails", function(req, res){
+app.post("/driverdetails", function (req, res) {
     let driver_fname = req.body.forename;
     let driver_lname = req.body.surname;
 
     mongo.connect(mongo_url, { useNewUrlParser: true }, function (err, db) {
         if (err) throw err;
         let db_object = db.db("F1Stats");
-        let db_query = { "forename": driver_fname, "surname": driver_lname};
+        let db_query = { "forename": driver_fname, "surname": driver_lname };
 
         db_object.collection("Drivers").find(db_query).toArray(function (err, result) {
             if (err) throw err;
@@ -64,26 +79,23 @@ app.post("/driverdetails", function(req, res){
     });
 });
 
-app.post('/driverupdates', function(req, res){
-    let id = { "_id": ObjectID(req.body._id)}
-
+app.post('/driverupdates', function (req, res) {
+    let id = req.body._id + "_" + req.cookies.cookieName;
     delete req.body._id;
-    let update = {$set: req.body}
+    let update_data = { $set: req.body };
 
-    mongo.connect(mongo_url, {useNewUrlParser: true}, function(err,db){
-        if(err) throw err
+    mongo.connect(mongo_url, { useNewUrlParser: true }, function (err, db) {
+        if (err) throw err;
         let db_object = db.db("F1Stats");
-        console.log(req.body);
-        
-        db_object.collection("Drivers").updateOne(id, update , function(err, result){
-            if (err) throw err
+
+        db_object.collection("DriversToReview").update({ _id: id }, update_data, { upsert: true }, function (err, result) {
+            if (err) throw err;
             // console.log(result)
-            console.log("DB was updated")
+            console.log("DB was updated");
 
             db.close();
-        })
-    })
-
+        });
+    });
 });
 
 app.get('/driver', function (req, res) {
@@ -93,7 +105,7 @@ app.get('/driver', function (req, res) {
     mongo.connect(mongo_url, { useNewUrlParser: true }, function (err, db) {
         if (err) throw err;
         let db_object = db.db("F1Stats");
-        let db_query = { "forename": driver_fname, "surname": driver_lname};
+        let db_query = { "forename": driver_fname, "surname": driver_lname };
 
         let render_data = {
             page_script: "js/driver.js"

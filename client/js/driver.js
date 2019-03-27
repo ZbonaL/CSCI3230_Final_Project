@@ -7,7 +7,7 @@ $(document).ready(function () {
     } else {
         // Append the driver picture
         getPicUrl(driver_name, function (data) {
-            $("<img class='driver-portrait driver-thumbnail' src=" + data.items[0].link + ">").appendTo($("#driver-image"));
+            $("<img class='driver-portrait' src=" + data.items[0].link + ">").appendTo($("#driver-image"));
         });
 
         $(".update-btn").click(function () {
@@ -63,7 +63,7 @@ $(document).ready(function () {
                         // Get the original text
                         let original_content = target.text();
                         // Make a button to confirm the row edit
-                        let confirm_button = $('<input type="button" value="confirm" class="f1-font confirm-btn"/>');
+                        let confirm_button = $('<input type="button" value="confirm" class="f1-font btn btn-danger confirm-btn"/>');
 
                         // Set the column to be editable
                         target.attr('contenteditable', true);
@@ -85,6 +85,15 @@ $(document).ready(function () {
     }
 });
 
+// Deselect the table if clicking anywhere
+$(document).click(function (event) {
+    // Get the clicked element
+    let target = $(event.target);
+
+    // Remove all the previously selected rows
+    removeSelected($(".table"), $(target.parent()), true);
+});
+
 function removeSelected(element, target_parent, revert_val) {
     // Get all the contenteditable tds
     let editable_tds = element.find("td[contenteditable='true']");
@@ -97,7 +106,10 @@ function removeSelected(element, target_parent, revert_val) {
             // If we are reverting the value copy the id back into the element
             if (revert_val) {
                 let original_val = td.prop("id");
-                td.text(original_val);
+                if (original_val != td.text()) {
+                    // Animate the text fading out
+                    fadeInOut(td, original_val);
+                }
             }
             // Remove the id and the contenteditable attributes
             td.removeAttr('id');

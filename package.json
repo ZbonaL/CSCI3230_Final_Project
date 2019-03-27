@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/ZbonaL/CSCI3230_Final_Project#readme",
   "dependencies": {
+    "cookie-parser": "^1.4.4",
     "express": "^4.16.4",
     "mongodb": "^3.2.2",
     "pug": "^2.0.3"

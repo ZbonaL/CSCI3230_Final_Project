@@ -16,6 +16,12 @@ body {
     padding-top: 70px;
 }
 
+/* Change the input to be red on focus */
+
+td:focus {
+    outline-color: #dd0401;
+}
+
 /* Provide some padding for the rows */
 
 .row {
@@ -111,9 +117,20 @@ body {
 }
 
 /* The style of the driver page */
+
 .driver-portrait {
     object-fit: cover;
     object-position: 0% 10%;
+    width: 250px;
+}
+
+.confirm-btn, .update-btn {
+    background-color: #dd0401 !important;
+    color: #FFF !important;
+
+    float: right;
+    padding: 0.07rem;
+    font-size: 1rem;
 }
 
 /* Give the driver a shadow */
@@ -135,10 +152,4 @@ body {
 
 .dropshadow:hover {
     box-shadow: 0px 14px 28px rgba(0, 0, 0, 0.25), 0 10px 30px rgba(0, 0, 0, 0.22);
-}
-
-.update-btn, .confirm-btn {
-    float: right;
-    padding: 0.07rem;
-    font-size: 1rem;
 }
