@@ -11,16 +11,22 @@ $(document).ready(function () {
         });
 
         $(".update-btn").click(function () {
-            // update db here
-            let test = updateDB($(".table"));
-            console.log(test);
+            // Show the dialog
+            $("#confirm-modal").modal('show');
+        });
 
-
+        // If the user clicks no in the modal, just hide the modal
+        $("#modal-no-btn").click(function () {
+            $("#confirm-modal").modal('hide');
+        });
+        // If the user clicks yes in the modal, hide the modal and send the data
+        $("#modal-yes-btn").click(function () {
+            $("#confirm-modal").modal('hide');
             $.ajax({
                 url: "/driverupdates",
                 method: "POST",
                 data: updateDB($(".table")),
-            })
+            });
         });
 
         $.ajax({
@@ -63,7 +69,7 @@ $(document).ready(function () {
                         // Get the original text
                         let original_content = target.text();
                         // Make a button to confirm the row edit
-                        let confirm_button = $('<input type="button" value="confirm" class="f1-font btn btn-danger confirm-btn"/>');
+                        let confirm_button = $('<input type="button" value="✓" class="f1-font btn btn-danger confirm-btn"/>');
 
                         // Set the column to be editable
                         target.attr('contenteditable', true);

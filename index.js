@@ -11,6 +11,10 @@ app.use(body_parser.urlencoded({ extended: false }));
 app.use(cookie_parser());
 app.use(express.static(`${__dirname}/client`));
 
+let mongo_url = "mongodb://localhost:27017/";
+
+app.listen(port, () => console.log("Listening on port " + port + "..."));
+
 // Set a new cookie for the client if 
 // they don't have one already
 app.use(function (req, res, next) {
@@ -25,10 +29,8 @@ app.use(function (req, res, next) {
 });
 
 
-let mongo_url = "mongodb://localhost:27017/";
-
 app.get('/', function (req, res) {
-    res.render('index');
+    res.render('index', { page_script: "js/index.js" });
 });
 
 app.get('/search', function (req, res) {
@@ -134,8 +136,16 @@ app.get('/driver', function (req, res) {
     });
 });
 
-app.listen(port, () => console.log("Listening on port " + port + "..."));
+app.get('/driveramount', function (req, res) {
+    mongo.connect(mongo_url, { useNewUrlParser: true }, function (err, db) {
+        if (err) throw err;
+        let db_object = db.db("F1Stats");
 
+        db_object.collection("Drivers").countDocuments({}, function (err, result) {
+            res.json({ amount: result });
+        });
+    });
+});
 
 function fixPeriod(result) {
     for (let i = 0; i < result.length; i++) {
