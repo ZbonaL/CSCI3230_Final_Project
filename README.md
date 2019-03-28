@@ -1,12 +1,34 @@
 # CSCI3230_Final_Project
+    - This appication is used as a Formula One driver search and update tool.
+    - For this project we used paired programming.
 
-This is a webapp that helps show the changes between the diffrenet eras in Formula 1.
+# How To start:
 
-# What is meant by eras.
-Eras are the diffrenet times since 1950 that there has been a rule change that has made changes to the engines in Formula1.
+## Node
+```bash
+npm start or nodemon npm start
+```
 
- Formula 1 Era | Engine Model       
----------------|-----------------
- 1947 - 1953   | 4.5 L and 1.5L Atmospheric engines
- 1954 - 1960   | 2.5 L SC 750cc
- 1961 - 1965   | 
+## Database:
+    - There are 3 data files neede for this app:
+    - Files are stored in data folder.
+        1. Drivers.json: Holds all the dirver data
+        2. Users.json: Stores all users
+        3. driversToReview: If updates to drivers are made, data is stored here (made by app if it doesnt exist,)
+    
+    - The mongo client looks for mongodb://localhost:27017/
+
+## Description of the site:
+    - The homepage provides a brief look into the sport.
+    - The Search pages allows you to search for drivers based on First/Last name and provides brief information.
+    - Add driver allows you to add new drivers to DB.
+    - Admin tab allows you to login as admin and confirm changes to DB.
+
+## List of Drivers:
+    Here is a list of drives that can be used to search:
+        1. Mark Webber
+        2. Lewis Hamilton
+        3. Mika Salo
+        4. Martin Brundel
+        5. Takuma Sato
+
