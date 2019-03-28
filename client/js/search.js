@@ -11,7 +11,7 @@ $(document).ready(function () {
         query = query.charAt(0).toUpperCase() + query.slice(1);
 
         // Get the checked radio button
-        let query_type = form.find(".form-check > input:checked").val();
+        let query_type = form.find(".custom-radio > input:checked").val();
 
         // The div for the results
         let results_div = $("#search-results");
@@ -30,32 +30,17 @@ $(document).ready(function () {
                     let row = $("<div class='row result-card f1-font p-2 dropshadow'></div>").appendTo(results_div);
                     row.text("No results found");
                 } else {
-                    for (let i = 0; i < result.length; i++) {
-                        // The div for the row, image and name containers
-                        let row = $("<div class='row result-card p-2 dropshadow'></div>").appendTo(results_div);
-                        let image_col = $("<div class='col-2 pr-0 pl-0'></div>").appendTo(row);
-                        let result_col = $("<div class='col mt-3 pl-2'></div>").appendTo(row);
-
-                        let pic_query = result[i]["forename"] + "+" + result[i]["surname"] + "+F1+driver+picture";
-                        getPicUrl(pic_query, function (data) {
-                            $("<img class='driver-thumbnail' src=" + data.items[0].link + ">").appendTo(image_col);
-                        });
-
-                        // Append the drivers name and number
-                        $("<h3 class='driver-name f1-font'>" + result[i].forename + " " + result[i].surname + "</h3>").appendTo(result_col);
-                        $("<h6 class='f1-font'>#" + result[i].number + "</h6>").appendTo(result_col);
 
 
-                        row.click(function () {
-                            // Get the row clicked
-                            let target = $(this);
+                    populateResults(result, results_div, function () {
+                        // Get the row clicked
+                        let target = $(this);
 
-                            // Get the name of the row
-                            let name = target.find(".driver-name").text().split(" ");
-                            // Redirect to the edit page
-                            window.location.href = "/driver?forename=" + name[0] + "&surname=" + name[1];
-                        });
-                    }
+                        // Get the name of the row
+                        let name = target.find(".driver-name").text().split(" ");
+                        // Redirect to the edit page
+                        window.location.href = "/driver?forename=" + name[0] + "&surname=" + name[1];
+                    });
                 }
             },
             async: true

@@ -1,0 +1,17 @@
+include nav.pug
+
+div.container.search-form.f1-border-form.pl-5.pr-5.mt-4#login-page
+    div.row(style="border-bottom: 2px solid lightgrey;").pt-4.pb-0
+        h3.f1-font-bold Log in
+    div.row
+        form#login-form
+            div.form-group
+                label.f1-font Username:
+                input.form-control#username-input(type='text' placeholder='Enter a username')
+            div.form-group
+                label.f1-font Password:
+                input.form-control#password-input(type='password' placeholder='Enter a password')
+            div.form-group.mt-4.mb-0
+                button.btn.f1-background.f1-font(type='submit') Login
+
+div.container#admin-results

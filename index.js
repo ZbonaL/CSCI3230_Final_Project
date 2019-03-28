@@ -1,6 +1,6 @@
 let express = require('express');
 var body_parser = require('body-parser');
-var cookie_parser = require('cookie-parser')
+var cookie_parser = require('cookie-parser');
 let mongo = require('mongodb').MongoClient;
 
 const app = express();
@@ -21,6 +21,7 @@ app.use(function (req, res, next) {
     let cookie = req.cookies.cookieName;
     // Check if we have a cookie from the client
     if (cookie === undefined) {
+        // Generate a random string for the cookie
         let cookie_id = Math.random().toString();
         // Set to expire in *a long time*
         res.cookie('cookieName', cookie_id, { expires: new Date(253402300000000) });
@@ -31,6 +32,49 @@ app.use(function (req, res, next) {
 
 app.get('/', function (req, res) {
     res.render('index', { page_script: "js/index.js" });
+});
+
+app.get('/admin', function (req, res) {
+    res.render('admin', { page_script: "js/admin.js" });
+});
+
+// A *very* basic login function
+// Checks if the user exists and if it does returns 1
+// else returns 0
+app.post('/login', function (req, res) {
+    let username = req.body.username;
+    let password = req.body.password;
+
+    mongo.connect(mongo_url, { useNewUrlParser: true }, function (err, db) {
+        if (err) throw err;
+        let db_object = db.db("F1Stats");
+
+        let db_query = { username: username, password: password };
+        db_object.collection("Users").find(db_query).toArray(function (err, result) {
+            if (err) throw err;
+
+            let message = {};
+            if (result.length >= 1) {
+                // If the user can log in send them the relevant info
+                message.status = 1;
+                db_object.collection("DriversToReview").find({}).toArray(function (err, pending_results) {
+                    for (let row of pending_results) {
+                        let _id = row._id.split("_")[0];
+                        let cookie = row._id.split("_")[1];
+                        row._id = _id;
+                        row.cookie_id = cookie;
+                    }
+                    message.results = pending_results;
+                    db.close();
+                    res.json(message);
+                });
+            } else {
+                message.status = 0;
+                db.close();
+                res.json(message);
+            }
+        });
+    });
 });
 
 app.get('/search', function (req, res) {
@@ -47,7 +91,14 @@ app.post('/query', function (req, res) {
 
         let db_query = {};
         if (query != "") {
-            db_query.forename = query;
+            switch (query_type) {
+                case "fname":
+                    db_query.forename = query;
+                    break;
+                case "lname":
+                    db_query.surname = query;
+                    break;
+            }
         }
 
         db_object.collection("Drivers").find(db_query).limit(15).toArray(function (err, result) {
@@ -73,15 +124,13 @@ app.post("/driverdetails", function (req, res) {
             if (err) throw err;
             fixPeriod(result);
             db.close();
-
-
-            fixPeriod(result);
+            
             res.json(result);
         });
     });
 });
 
-app.post('/driverupdates', function (req, res) {
+app.post('/addToReview', function (req, res) {
     let id = req.body._id + "_" + req.cookies.cookieName;
     delete req.body._id;
     let update_data = { $set: req.body };
@@ -90,11 +139,43 @@ app.post('/driverupdates', function (req, res) {
         if (err) throw err;
         let db_object = db.db("F1Stats");
 
-        db_object.collection("DriversToReview").update({ _id: id }, update_data, { upsert: true }, function (err, result) {
+        db_object.collection("DriversToReview").updateOne({ _id: id }, update_data, { upsert: true }, function (err, result) {
             if (err) throw err;
             // console.log(result)
             console.log("DB was updated");
 
+            db.close();
+        });
+    });
+});
+
+app.post('/updateDriver', function (req, res) {
+    let data = req.body;
+    delete data._id;
+
+    mongo.connect(mongo_url, { useNewUrlParser: true }, function (err, db) {
+        if (err) throw err;
+        let db_object = db.db("F1Stats");
+
+        db_object.collection("Drivers").updateOne({ forename: data.forename, surname: data.surname }, data, { upsert: true }, function (err, result) {
+            if (err) throw err;
+            console.log("The drivers table was updated");
+            db.close();
+        });
+    });
+});
+
+app.post('/removeDriverChange', function (req, res) {
+    let data = req.body;
+    delete data._id;
+    delete data.cookie_id
+
+    mongo.connect(mongo_url, { useNewUrlParser: true }, function (err, db) {
+        if (err) throw err;
+        let db_object = db.db("F1Stats");
+        db_object.collection("DriversToReview").removeOne({ forename: data.forename, surname: data.surname }, { upsert: true }, function (err, result) {
+            if (err) throw err;
+            console.log("The driver change table was updated");
             db.close();
         });
     });
@@ -143,6 +224,21 @@ app.get('/driveramount', function (req, res) {
 
         db_object.collection("Drivers").countDocuments({}, function (err, result) {
             res.json({ amount: result });
+        });
+    });
+});
+
+app.get('/columns', function (req, res) {
+    mongo.connect(mongo_url, { useNewUrlParser: true }, function (err, db) {
+        if (err) throw err;
+        let db_object = db.db("F1Stats");
+
+        db_object.collection("Drivers").findOne({}, function (err, result) {
+            let fields = {};
+            for (let field in result) {
+                fields[field] = "";
+            }
+            res.json(fields);
         });
     });
 });

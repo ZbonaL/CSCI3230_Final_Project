@@ -22,6 +22,10 @@ td:focus {
     outline-color: #dd0401;
 }
 
+td {
+    width: 70%;
+}
+
 .f1-background {
     background-color: #dd0401 !important;
     color: #FFF !important;
@@ -99,22 +103,12 @@ td:focus {
     margin: 0 20px 20px 20px;
 }
 
+/* The border for input forms */
+
 .f1-border-form {
     border: 1px solid black;
     border-radius: 10px;
 }
-
-/* The styling for the content on the main page */
-
-/* .index-content * {
-    margin-top: 20px;
-} */
-
-/* The styling for the paragraph content on the index */
-
-/* .index-content p {
-    margin: 0 20px 20px 20px;
-} */
 
 /* The style of the search results */
 
