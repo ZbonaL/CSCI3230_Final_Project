@@ -2,7 +2,7 @@
  * This class is used to store functions that are required by many 
  * functions on the site
  */
-let google_key = "";
+let google_key = "AIzaSyDj1rl69AnwZms4vCGNjljDE89-sHY05E4";
 
 function getPicUrl(query, func, default_pic = false) {
 
