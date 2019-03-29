@@ -5,10 +5,18 @@ div.container(id="content")
     div.col
       div.about-div.f1-border-primary
         h3.about-header.f1-font-bold.pt-3 About
-        p.para.text-body  This application explores how the sport of Formula 1 has evolved sice 1947.
-          |  The sport is always evolving, the cars are not what they were 5 years ago, 10 years ago.
-          |  The technologies developed from this sport makes its way down to the cars that we drive today.
-          |  There have been nine different era's in this sport and within those eras there are different types of engines.
+        p.para.text-body Formula One is a sport where technology meets human reactions.
+          | This sport is always adapting and changing. New rules are put inplace every season and the cars get faster.
+          | This is a sport of strategy, timing, skill and most of all luck. 
+  div.row
+    div.col
+      div.how-to-use
+        h5.f1-font-bold.f1-border-secondary.pb-3 How To Use
+        ul.how-to-use-list 
+          li Search: Allows you to search database of drivers and edit their information.
+          li Add Driver: Allows you to add a new driver to the database.
+          li Admin: Allows admin to log in and confirm changes to the database.
+
   div.row
     div.col
       div.engines
@@ -31,3 +39,8 @@ div.container(id="content")
     | There are 
     span.ml-1.mr-1#driver-amount
     | driver(s) currently recorded in the system
+
+  div.bottom-page
+    row.text-body
+      p.para.text-body Some examples of changes to Formula One cars throughout the era's.
+    img.dropshadow(src="img/differences.jpg", id="diff")

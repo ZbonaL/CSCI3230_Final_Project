@@ -6,6 +6,7 @@
 
 ## Node
 ```bash
+npm install
 npm start or nodemon npm start
 ```
 
