@@ -13,7 +13,9 @@ app.use(express.static(`${__dirname}/client`));
 
 let mongo_url = "mongodb://localhost:27017/";
 
-app.listen(port, () => console.log("Listening on port " + port + "..."));
+app.listen(port, function () {
+    console.log("Listening on port " + port + "...");
+});
 
 // Set a new cookie for the client if 
 // they don't have one already
@@ -24,11 +26,10 @@ app.use(function (req, res, next) {
         // Generate a random string for the cookie
         let cookie_id = Math.random().toString();
         // Set to expire in *a long time*
-        res.cookie('cookieName', cookie_id, { expires: new Date(253402300000000) });
+        res.cookie('cookieName', cookie_id, { expires: new Date(2018, 0, 1, 0, 0, 0, 0) });
     }
     next();
 });
-
 
 app.get('/', function (req, res) {
     res.render('index', { page_script: "js/index.js" });
@@ -89,6 +90,7 @@ app.post('/query', function (req, res) {
         if (err) throw err;
         let db_object = db.db("F1Stats");
 
+        // Get the specific info to query
         let db_query = {};
         if (query != "") {
             switch (query_type) {
@@ -101,6 +103,7 @@ app.post('/query', function (req, res) {
             }
         }
 
+        // Return the results (15 max)
         db_object.collection("Drivers").find(db_query).limit(15).toArray(function (err, result) {
             if (err) throw err;
             fixPeriod(result);
@@ -115,6 +118,7 @@ app.post("/driverdetails", function (req, res) {
     let driver_fname = req.body.forename;
     let driver_lname = req.body.surname;
 
+    // Get the info of a specific driver
     mongo.connect(mongo_url, { useNewUrlParser: true }, function (err, db) {
         if (err) throw err;
         let db_object = db.db("F1Stats");
@@ -124,7 +128,7 @@ app.post("/driverdetails", function (req, res) {
             if (err) throw err;
             fixPeriod(result);
             db.close();
-            
+
             res.json(result);
         });
     });
@@ -139,11 +143,10 @@ app.post('/addToReview', function (req, res) {
         if (err) throw err;
         let db_object = db.db("F1Stats");
 
+        // Update a row in the db
         db_object.collection("DriversToReview").updateOne({ _id: id }, update_data, { upsert: true }, function (err, result) {
             if (err) throw err;
-            // console.log(result)
             console.log("DB was updated");
-
             db.close();
         });
     });
@@ -153,6 +156,7 @@ app.post('/updateDriver', function (req, res) {
     let data = req.body;
     delete data._id;
 
+    // Update the row in the main driver collection
     mongo.connect(mongo_url, { useNewUrlParser: true }, function (err, db) {
         if (err) throw err;
         let db_object = db.db("F1Stats");
@@ -170,6 +174,7 @@ app.post('/removeDriverChange', function (req, res) {
     delete data._id;
     delete data.cookie_id
 
+    // Remove the driver from the review table
     mongo.connect(mongo_url, { useNewUrlParser: true }, function (err, db) {
         if (err) throw err;
         let db_object = db.db("F1Stats");
@@ -194,6 +199,7 @@ app.get('/driver', function (req, res) {
             page_script: "js/driver.js"
         }
 
+        // Render the specific driver data and render a page
         db_object.collection("Drivers").find(db_query).toArray(function (err, result) {
             if (err) throw err;
             fixPeriod(result);
@@ -222,6 +228,7 @@ app.get('/driveramount', function (req, res) {
         if (err) throw err;
         let db_object = db.db("F1Stats");
 
+        // Return the amount of drivers in the main collection
         db_object.collection("Drivers").countDocuments({}, function (err, result) {
             res.json({ amount: result });
         });
@@ -233,6 +240,7 @@ app.get('/columns', function (req, res) {
         if (err) throw err;
         let db_object = db.db("F1Stats");
 
+        // Find all columns from a collections
         db_object.collection("Drivers").findOne({}, function (err, result) {
             let fields = {};
             for (let field in result) {
@@ -243,24 +251,13 @@ app.get('/columns', function (req, res) {
     });
 });
 
+// Fix the periods encoded in {PERIOD} in the db to normal '.'
 function fixPeriod(result) {
     for (let i = 0; i < result.length; i++) {
         for (let col in result[i]) {
             if (typeof (result[i][col]) == "string") {
                 while (result[i][col].indexOf("{PERIOD}") != -1) {
                     result[i][col] = result[i][col].replace("{PERIOD}", ".");
-                }
-            }
-        }
-    }
-}
-
-function reversefixPeriod(result) {
-    for (let i = 0; i < result.length; i++) {
-        for (let col in result[i]) {
-            if (typeof (result[i][col]) == "string") {
-                while (result[i][col].indexOf(".") != -1) {
-                    result[i][col] = result[i][col].replace(".", "{PERIOD}");
                 }
             }
         }
