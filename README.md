@@ -11,7 +11,7 @@ npm start or nodemon npm start
 ```
 
 ## Database:
-    - There are 3 data files neede for this app:
+    - There are 3 data files needed for this app:
     - Files are stored in data folder.
         1. Drivers.json: Holds all the dirver data
         2. Users.json: Stores all users
