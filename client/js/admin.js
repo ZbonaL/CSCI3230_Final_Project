@@ -49,7 +49,7 @@ function login(username, password) {
                     // Add the new changes to the main table
                     // also remove the changes from the "pending changes" table
                     accept_change_btn.click(function (event) {
-                        let table = $(event.target).parentsUtil(".row").find("table");
+                        let table = $($(event.target).parentsUntil(".row").parent()).find("table");
                         let data = tableToJSON(table);
                         delete data.cookie_id;
 
@@ -73,7 +73,7 @@ function login(username, password) {
 
                     // Remove the change from the "pending changes" table
                     reject_change_btn.click(function (event) {
-                        let table = $(event.target).parentsUtil(".row").find("table");
+                        let table = $($(event.target).parentsUntil(".row").parent()).find("table");
                         let data = tableToJSON(table);
                         delete data.cookie_id;
 
@@ -84,6 +84,7 @@ function login(username, password) {
                             data: data
                         });
 
+                        console.log(table);
                         // Remove the card once done
                         $(table.parent()).remove();
                     });
